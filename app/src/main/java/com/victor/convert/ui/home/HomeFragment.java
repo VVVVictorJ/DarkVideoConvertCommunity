@@ -1,5 +1,7 @@
 package com.victor.convert.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +25,7 @@ import androidx.navigation.Navigation;
 import com.victor.convert.R;
 import com.victor.convert.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment  {
+public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     final static String Key = "number";
@@ -31,7 +33,7 @@ public class HomeFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+                ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
         homeViewModel.getText().observe(this, new Observer<String>() {
@@ -40,15 +42,18 @@ public class HomeFragment extends Fragment  {
                 textView.setText(s);
             }
         });
-        //以下是数据绑定
+
+        homeViewModel.context = getActivity();
+
         final FragmentHomeBinding binding = DataBindingUtil.inflate(
-                inflater,R.layout.fragment_home,container,false);
-        binding.setData(homeViewModel);
-        binding.setLifecycleOwner(this);
+                inflater, R.layout.fragment_home, container, false);//创建binding对象
+        binding.setData(homeViewModel);//绑定model
+        binding.setLifecycleOwner(this);//this指针指向此对象
+
         homeViewModel.getmNumber().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                binding.textView3.setText(String.valueOf(integer));
+                binding.textView3.setText(String.valueOf(integer));//观测model对象中的值是否变化，若变化则修改textview中的值。
             }
         });
         return binding.getRoot();
@@ -57,23 +62,33 @@ public class HomeFragment extends Fragment  {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState!=null){
-            homeViewModel.getmNumber().setValue(savedInstanceState.getInt(Key));
+        if (savedInstanceState != null) {
+            homeViewModel.getmNumber().setValue(savedInstanceState.getInt(Key));//若实例状态非空，取出保存在对象中的值
         }
-        Button button;
-        button = getView().findViewById(R.id.button3);
-        button.setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {//定义button3动作
             @Override
-            public void onClick(View view) {
-                NavController navController = Navigation.findNavController(view);
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(v);
                 navController.navigate(R.id.action_nav_home_to_nav_gallery);
             }
         });
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(Key,homeViewModel.getmNumber().getValue());
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        homeViewModel.save();
+    }
+
+    //    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putInt(Key, homeViewModel.getmNumber().getValue());//保存
+//    }
 }

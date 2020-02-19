@@ -17,4 +17,11 @@
     <string name="button">Button</string>
     <string name="click">Click</string>
     <string name="plus">plus</string>
+
+    <string name="defaultInt">0</string>
+    <string name="sum">0</string>
+    <string name="SharePerName">sp</string>
+    <string name="save_int">value</string>
+    <string name="default_value">0</string>
+
 </resources>
