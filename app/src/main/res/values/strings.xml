@@ -13,4 +13,8 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="image_test">girl</string>
+    <string name="button">Button</string>
+    <string name="click">Click</string>
+    <string name="plus">plus</string>
 </resources>
