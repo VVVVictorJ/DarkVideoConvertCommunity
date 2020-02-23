@@ -23,5 +23,9 @@
     <string name="SharePerName">sp</string>
     <string name="save_int">value</string>
     <string name="default_value">0</string>
+    <string name="account_view">account_view</string>
+    <string name="good_point">good_point</string>
+    <string name="bad_point">bad_point</string>
+
 
 </resources>
